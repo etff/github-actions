@@ -31,4 +31,15 @@ jobs:
           docker build -t spring-cicd .
           docker tag spring-cicd wish2rich/spring-cicd:${GITHUB_SHA::7}
           docker push wish2rich/spring-cicd:${GITHUB_SHA::7}
-
+      - name:
+        uses: appleboy/ssh-action@master
+        with:
+          host: ec2-3-35-20-96.ap-northeast-2.compute.amazonaws.com
+          username: ec2-user
+          key: ${{ secrets.PRIVATE_KEY }}
+          envs: GITHUB_SHA
+          scripts: |
+            docker pull wish2rich/spring-cicd:${GITHUB_SHA::7}
+            docker tag wish2rich/spring-cicd:${GITHUB_SHA::7} spring-cicd
+            docker stop erver
+            docker run -d --rm --name server -p 80:8080 spring-cicd
