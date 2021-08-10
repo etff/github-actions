@@ -38,8 +38,10 @@ jobs:
           username: ec2-user
           key: ${{ secrets.PRIVATE_KEY }}
           envs: GITHUB_SHA
-          scripts: |
+          script: |
             docker pull wish2rich/spring-cicd:${GITHUB_SHA::7}
             docker tag wish2rich/spring-cicd:${GITHUB_SHA::7} spring-cicd
-            docker stop erver
+            docker stop server
             docker run -d --rm --name server -p 80:8080 spring-cicd
+
+
