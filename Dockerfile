@@ -1,3 +1,7 @@
-FROM openjdk:11-slim-buster AS builder
+FROM openjdk:11.0.10-jre-slim-buster AS builder
+COPY . .
+CMD ["./gradlew", "assemble"]
+
+FROM openjdk:11.0.10-jre-slim-buster
 COPY --from=builder /build/libs/app.jar .
-ENTRYPOINT ["java","-jar","/app.jar"]
+CMD ["java", "-jar", "app.jar"]
